@@ -15,5 +15,7 @@ namespace Acme.QLDN.OrgUnits
 
         public Guid ManagerId { get; set; }
 
+
+
     }
 }

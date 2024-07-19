@@ -5,6 +5,8 @@ namespace Acme.QLDN.OrgUnits
 {
     public class CreateUpdateOrgUnitDto
     {
+        public Guid Id { get; set; }
+
         [Required]
         public string OrgUnitName { get; set; } = string.Empty;
 

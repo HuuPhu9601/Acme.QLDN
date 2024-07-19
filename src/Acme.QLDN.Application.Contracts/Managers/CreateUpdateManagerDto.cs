@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Acme.QLDN.Managers
 {
     public class CreateUpdateManagerDto
     {
+        public Guid Id { get; set; }
+
         [Required]
         public string ManagerName { get; set; } = string.Empty;
 

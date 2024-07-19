@@ -32,9 +32,9 @@ namespace Acme.QLDN
             {
                 await _staffRepo.InsertManyAsync(new List<Staff>()
                 {
-                    new Staff(){StaffName = "Nhan vien 1", Age = 25,Address = "Ha Noi", StatusId = 1},
-                    new Staff(){StaffName = "Nhan vien 2", Age = 25,Address = "Ha Noi", StatusId = 1},
-                    new Staff(){StaffName = "Nhan vien 3", Age = 25,Address = "Ha Noi", StatusId = 1},
+                    new Staff(){StatusId = 1}.ChangeName("Nhan vien 1").ChangeAge(25).ChangeAddress("Ha Noi"),
+                    new Staff(){StatusId = 1}.ChangeName("Nhan vien 2").ChangeAge(25).ChangeAddress("Ha Noi"),
+                    new Staff(){StatusId = 1}.ChangeName("Nhan vien 3").ChangeAge(25).ChangeAddress("Ha Noi"),
                 });
             }
         }

@@ -42,7 +42,8 @@ public class QLDNEntityFrameworkCoreTestModule : AbpModule
         });
         context.Services.AddAlwaysDisableUnitOfWorkTransaction();
 
-        ConfigureInMemorySqlite(context.Services);
+        //ConfigureInMemorySqlite(context.Services);
+        ConfigureSqlServer(context.Services); //kết nối sql server
     }
 
     private void ConfigureInMemorySqlite(IServiceCollection services)
@@ -54,6 +55,18 @@ public class QLDNEntityFrameworkCoreTestModule : AbpModule
             options.Configure(context =>
             {
                 context.DbContextOptions.UseSqlite(_sqliteConnection);
+            });
+        });
+    }
+
+    private void ConfigureSqlServer(IServiceCollection services)
+    {
+
+        services.Configure<AbpDbContextOptions>(options =>
+        {
+            options.Configure(context =>
+            {
+                context.DbContextOptions.UseSqlServer("Server=CPG109\\PHUNH;Database=QLDN_2;Trusted_Connection=True;TrustServerCertificate=True");
             });
         });
     }

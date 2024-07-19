@@ -12,5 +12,6 @@ namespace Acme.QLDN.Managers
         public string Address { get; set; }
 
         public int StatusId { get; set; }
+
     }
 }

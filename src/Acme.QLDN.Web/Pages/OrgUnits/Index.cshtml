@@ -1,0 +1,17 @@
+﻿@page
+@using Acme.QLDN.Localization
+@using Microsoft.Extensions.Localization
+@model Acme.QLDN.Web.Pages.OrgUnits.IndexModel
+@inject IStringLocalizer<QLDNResource> L
+@section scripts
+{
+    <abp-script src="/Pages/Books/Index.js" />
+}
+<abp-card>
+    <abp-card-header>
+        <h2>@L["OrgUnits"]</h2>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="BooksTable"></abp-table>
+    </abp-card-body>
+</abp-card>

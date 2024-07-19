@@ -9,9 +9,9 @@ namespace Acme.QLDN.OrgUnits
 {
     public class OrgUnit : AuditedAggregateRoot<Guid>
     {
-        public string OrgUnitName { get; set; }
+        public string OrgUnitName { get; private set; }
 
-        public int MaxQty { get; set; }
+        public int MaxQty { get; private set; }
 
         public int StatusId { get; set; }
 
@@ -23,5 +23,17 @@ namespace Acme.QLDN.OrgUnits
         public Manager Manager { get; set; }
 
         public ICollection<OrgStaff> OrgStaffs { get; set; }
+
+        public OrgUnit ChangeOrgUnitName(string name)
+        {
+            OrgUnitName = name;
+            return this;
+        }
+
+        public OrgUnit ChangeMaxQty(int qty)
+        {
+            MaxQty = qty;
+            return this;
+        }
     }
 }

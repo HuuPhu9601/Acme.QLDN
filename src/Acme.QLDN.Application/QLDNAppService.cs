@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Acme.QLDN.Localization;
+﻿using Acme.QLDN.Localization;
 using Volo.Abp.Application.Services;
 
 namespace Acme.QLDN;
