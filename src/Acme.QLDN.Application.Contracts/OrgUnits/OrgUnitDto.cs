@@ -5,7 +5,7 @@ namespace Acme.QLDN.OrgUnits
 {
     public class OrgUnitDto : AuditedEntityDto<Guid>
     {
-        public string OrgUnitName { get; set; }
+        public string OrgUnitName { get; set; } = string.Empty;
 
         public int MaxQty { get; set; }
 
