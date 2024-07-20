@@ -10,10 +10,17 @@ namespace Acme.QLDN.OrgUnits
     public class OrgUnitAppService : ApplicationService, IOrgUnitAppService
     {
         private readonly IRepository<OrgUnit> _orgUnitRepo;
+        private readonly IReadOnlyRepository<OrgUnit, Guid> _orgUnitReadRepo;
 
         public OrgUnitAppService(IRepository<OrgUnit> orgUnitRepo)
         {
             _orgUnitRepo = orgUnitRepo;
+        }
+
+        public OrgUnitAppService(IRepository<OrgUnit> orgUnitRepo, IReadOnlyRepository<OrgUnit, Guid> orgUnitReadRepo)
+        {
+            _orgUnitRepo = orgUnitRepo;
+            _orgUnitReadRepo = orgUnitReadRepo;
         }
 
         public async Task<List<OrgUnitDto>> GetListAsync()
@@ -31,6 +38,14 @@ namespace Acme.QLDN.OrgUnits
 
             return new OrgUnitDto() { Id = orgUnit.Id, OrgUnitName = orgUnit.OrgUnitName, MaxQty = orgUnit.MaxQty, StatusId = orgUnit.StatusId, ManagerId = orgUnit.ManagerId, OrgUnitParentId = orgUnit.OrgUnitParentId };
         }
+        public async Task<OrgUnit> GetOneAsync(Guid id, bool isEntiry)
+        {
+            IQueryable<OrgUnit> queryable = await _orgUnitRepo.GetQueryableAsync();
+
+            var orgUnit = queryable.SingleOrDefault(x => x.Id == id);
+            if (orgUnit == null) return null;
+            return orgUnit;
+        }
 
         public async Task<OrgUnitDto> CreateAsync(CreateUpdateOrgUnitDto dto)
         {
@@ -45,8 +60,7 @@ namespace Acme.QLDN.OrgUnits
         {
             if (dto == null) throw new Exception();
 
-            IQueryable<OrgUnit> queryable = await _orgUnitRepo.GetQueryableAsync();
-            var orgUnit = queryable.SingleOrDefault(x => x.Id == dto.Id);
+            var orgUnit = await _orgUnitReadRepo.FindAsync(dto.Id);
 
             orgUnit.ChangeOrgUnitName(dto.OrgUnitName).ChangeMaxQty(dto.MaxQty);
 
@@ -58,8 +72,7 @@ namespace Acme.QLDN.OrgUnits
         {
             if (dto == null) throw new Exception();
 
-            IQueryable<OrgUnit> queryable = await _orgUnitRepo.GetQueryableAsync();
-            var orgUnit = queryable.SingleOrDefault(x => x.Id == dto.Id);
+            var orgUnit = await _orgUnitReadRepo.FindAsync(dto.Id);
             await _orgUnitRepo.DeleteAsync(orgUnit);
         }
     }

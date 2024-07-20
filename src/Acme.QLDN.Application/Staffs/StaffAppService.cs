@@ -10,10 +10,17 @@ namespace Acme.QLDN.Staffs
     public class StaffAppService : ApplicationService, IStaffAppService
     {
         private readonly IRepository<Staff> _staffRepo;
+        private readonly IReadOnlyRepository<Staff, Guid> _staffReadRepo;
 
         public StaffAppService(IRepository<Staff> staffRepo)
         {
             _staffRepo = staffRepo;
+        }
+        public StaffAppService(IRepository<Staff> staffRepo, IReadOnlyRepository<Staff, Guid> staffReadRepo)
+        {
+            _staffRepo = staffRepo;
+            _staffReadRepo = staffReadRepo;
+
         }
 
         public async Task<List<StaffDto>> GetListAsync()
@@ -24,9 +31,7 @@ namespace Acme.QLDN.Staffs
 
         public async Task<StaffDto> GetOneAsync(Guid id)
         {
-            IQueryable<Staff> queryable = await _staffRepo.GetQueryableAsync();
-
-            var staff = queryable.SingleOrDefault(x => x.Id == id);
+            var staff = await _staffReadRepo.FindAsync(id);
             if (staff == null) return null;
             return new StaffDto() { Id = staff.Id, StaffName = staff.StaffName, Age = staff.Age, StatusId = staff.StatusId, Address = staff.Address };
         }
@@ -44,9 +49,7 @@ namespace Acme.QLDN.Staffs
         {
             if (dto == null) throw new Exception();
 
-            IQueryable<Staff> queryable = await _staffRepo.GetQueryableAsync();
-            var staff = queryable.SingleOrDefault(x => x.Id == dto.Id);
-
+            var staff = await _staffReadRepo.FindAsync(dto.Id);
             staff.ChangeAddress(dto.Address).ChangeName(dto.StaffName).ChangeAge(dto.Age);
 
             var staffUpdated = await _staffRepo.UpdateAsync(staff);
@@ -56,8 +59,7 @@ namespace Acme.QLDN.Staffs
         public async Task DeleteAsync(CreateUpdateStaffDto dto)
         {
             if (dto == null) throw new Exception();
-            IQueryable<Staff> queryable = await _staffRepo.GetQueryableAsync();
-            var staff = queryable.SingleOrDefault(x => x.Id == dto.Id);
+            var staff = await _staffReadRepo.FindAsync(dto.Id);
             await _staffRepo.DeleteAsync(staff);
         }
     }

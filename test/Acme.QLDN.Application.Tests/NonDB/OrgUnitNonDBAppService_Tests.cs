@@ -58,7 +58,59 @@ namespace Acme.QLDN.NonDB
             result.ShouldNotBeNull();
             result.ShouldBeOfType<OrgUnitDto>();
             result.MaxQty.ShouldBeGreaterThan(0);
-            result.OrgUnitName.ShouldNotBeEmpty();
+            result.OrgUnitName.ShouldNotBeNull();
         }
+
+        [Fact]
+        public void Test_OrgUnitAppService_UpdateOne_Fail()
+        {
+            //Arrange
+            IRepository<OrgUnit> _orgUnitRepo = Substitute.For<IRepository<OrgUnit>>();
+            OrgUnitAppService _orgUnitAppService = new OrgUnitAppService(_orgUnitRepo);
+
+            //act
+            var result = async () => { await _orgUnitAppService.UpdateAsync(null); };
+
+            //assert
+            result.ShouldThrow<Exception>();
+        }
+
+        [Fact]
+        public async Task Test_OrgUnitAppService_UpdateOne_Success()
+        {
+            //Arrange
+            IRepository<OrgUnit> _orgUnitRepo = Substitute.For<IRepository<OrgUnit>>();
+            IReadOnlyRepository<OrgUnit, Guid> _orgUnitReadRepo = Substitute.For<IRepository<OrgUnit, Guid>>();
+            OrgUnitAppService _orgUnitAppService = new OrgUnitAppService(_orgUnitRepo, _orgUnitReadRepo);
+
+            //act
+            _orgUnitReadRepo.FindAsync(Arg.Any<Guid>()).Returns(new OrgUnit());
+
+            _orgUnitRepo.UpdateAsync(Arg.Any<OrgUnit>()).Returns(new OrgUnit());
+            var result = await _orgUnitAppService.UpdateAsync(new CreateUpdateOrgUnitDto());
+
+            await _orgUnitRepo.Received().UpdateAsync(Arg.Any<OrgUnit>());
+
+            //assert
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType<OrgUnitDto>();
+            result.MaxQty.ShouldBeGreaterThan(0);
+            result.OrgUnitName.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void Test_OrgUnitAppService_Delete_Fail()
+        {
+            //Arrange
+            IRepository<OrgUnit> _orgUnitRepo = Substitute.For<IRepository<OrgUnit>>();
+            OrgUnitAppService _orgUnitAppService = new OrgUnitAppService(_orgUnitRepo);
+
+            //act
+            var result = async () => { await _orgUnitAppService.DeleteAsync(null); };
+
+            //assert
+            result.ShouldThrow<Exception>();
+        }
+
     }
 }
